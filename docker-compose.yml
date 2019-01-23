@@ -1,0 +1,37 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: moby
+      MYSQL_PASSWORD: letdockerin
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    networks:
+      - default
+    volumes:
+      - .db:/var/lib/mysql
+
+  phpmyadmin:
+    environment:
+      PMA_USER: moby
+      PMA_PASSWORD: letdockerin
+    image: phpmyadmin/phpmyadmin:latest
+    networks:
+      - default
+    ports:
+      - 8081:80
+
+  wordpress:
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: moby
+      WORDPRESS_DB_PASSWORD: letdockerin
+      WORDPRESS_DB_NAME: wpdb
+    image: wordpress:5.0.3-php7.1-apache
+    networks:
+      - default
+    ports:
+      - 8080:80
+    restart: always
